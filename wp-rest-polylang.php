@@ -5,8 +5,8 @@
  * Author: Marc-Antoine Ruel
  * Author URI: https://www.marcantoineruel.com
  * Version: 1.0.0
- * Plugin URI:
- * License: GPL2+
+ * Plugin URI: https://github.com/maru3l/wp-rest-polylang
+ * License: gpl-3.0
  */
 function WP_REST_polylang_init() {
     global $polylang;
