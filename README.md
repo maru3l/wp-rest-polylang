@@ -11,7 +11,7 @@ The locale value of the post
 ```
 {
   [...]
-  "lang": "en"
+  "polylang_current_lang": "en"
   [...]
 }
 ```
@@ -21,10 +21,12 @@ List of translation for the post
 ```
 {
   [...]
-  "translations": {
-    "en": 18,
-    "fr": 16
-  },
+  "polylang_translations": [
+    {
+      "locale": "fr",
+      "id": 1
+    }
+  ],
   [...]
 }
 ```
