@@ -32,7 +32,7 @@ class WP_REST_polylang
 		return self::$instance;
 	}
 
-	public static function init() {
+	public function init() {
 		global $polylang;
 
 		if (isset($_GET['lang'])) {
