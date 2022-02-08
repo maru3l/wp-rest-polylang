@@ -4,7 +4,7 @@
  * Description: Polylang integration for the WP REST API
  * Author: Marc-Antoine Ruel
  * Author URI: https://www.marcantoineruel.com
- * Version: 1.0.0
+ * Version: 1.1.0
  * Plugin URI: https://github.com/maru3l/wp-rest-polylang
  * License: gpl-3.0
  */
@@ -42,12 +42,20 @@ class WP_REST_polylang
 		}
 
 		$post_types = get_post_types( array( 'public' => true ), 'names' );
-
+		
 		foreach( $post_types as $post_type ) {
 			if (pll_is_translated_post_type( $post_type )) {
 				self::register_api_field($post_type);
 			}
 		}
+
+		$taxonomies = get_taxonomies(['show_in_rest' => true], 'names');
+
+		foreach ($taxonomies as $taxonomy) {
+			if (pll_is_translated_taxonomy($taxonomy)) {
+				 self::register_api_taxonomy($taxonomy);
+			}
+	  }
 	}
 
 	public function register_api_field($post_type) {
@@ -70,8 +78,25 @@ class WP_REST_polylang
 		);
 	}
 
+	public function register_api_taxonomy($taxonomy)
+	{
+		 register_rest_field(
+			  $taxonomy,
+			  "polylang_current_lang",
+			  array(
+					"get_callback" => array($this, "get_current_taxonomy_lang"),
+					"schema" => null,
+			  )
+		 );
+	}
+
 	public function get_current_lang( $object ) {
 		return pll_get_post_language($object['id'], 'locale');
+	}
+
+	public function get_current_taxonomy_lang($object)
+	{
+		return pll_get_term_language($object['id'], 'locale');
 	}
 
 	public function get_translations( $object ) {
