@@ -55,38 +55,33 @@ class WP_REST_polylang
 			$post_type,
 			"polylang_current_lang",
 			array(
-				"get_callback" => array( $this, "get_current_lang" ),
+				"get_callback" => function( $object ) use ( $post_type ){
+					return pll_get_post_language($object['id'], 'locale');			
+				},
 				"schema" => null
 			)
 		);
-
 		register_rest_field(
 			$post_type,
 			"polylang_translations",
 			array(
-				"get_callback" => array( $this, "get_translations"  ),
+				"get_callback" => function( $object ) use ( $post_type ){
+					$translations = pll_get_post_translations($object['id']);
+
+					return array_reduce($translations, function ($carry, $translation) {
+						$item = array(
+							'locale' => pll_get_post_language($translation, 'locale'),
+							'id' => $translation
+						);
+			
+						array_push($carry, $item);
+			
+						return $carry;
+					}, array());		
+				},
 				"schema" => null
 			)
 		);
-	}
-
-	public function get_current_lang( $object ) {
-		return pll_get_post_language($object['id'], 'locale');
-	}
-
-	public function get_translations( $object ) {
-		$translations = pll_get_post_translations($object['id']);
-
-		return array_reduce($translations, function ($carry, $translation) {
-			$item = array(
-				'locale' => pll_get_post_language($translation, 'locale'),
-				'id' => $translation
-			);
-
-			array_push($carry, $item);
-
-			return $carry;
-		}, array());
 	}
 }
 
